@@ -1,0 +1,29 @@
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: anime-etl-postgres
+    environment:
+      POSTGRES_DB: watchlist
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Cranky_Juice@2525
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  etl:
+    build: .
+    container_name: anime-etl
+    environment:
+      DB_HOST: postgres
+      DB_USER: postgres
+      DB_NAME: watchlist
+      DB_PASSWORD: Cranky_Juice@2525
+    depends_on:
+      - postgres
+    volumes:
+      - ./:/app
+
+volumes:
+  pgdata:
